@@ -1,0 +1,42 @@
+version: '3.9'
+services:
+  web:
+    image: mrmn/pdfding:latest
+    container_name: pdfding
+    restart: always
+    ports:
+      - ${APP_PORT}:8000
+    networks:
+      - default
+    volumes:
+      - data:/home/nonroot/pdfding/db
+      - media:/home/nonroot/pdfding/media
+      - ./data:/home/nonroot/pdfding/db
+      - ./media:/home/nonroot/pdfding/media
+    environment:
+      # use a long random secret
+      SECRET_KEY: secret_key
+      # the domain where you want to access PdfDing, e.g. pdfding.com
+      HOST_NAME: 127.0.0.1
+      # In production set to TRUE
+      CSRF_COOKIE_SECURE: FALSE
+      # In production set to TRUE
+      SESSION_COOKIE_SECURE: FALSE
+      # # use this if you want to use OIDC
+      # OIDC_ENABLE: TRUE
+      # OIDC_CLIENT_ID: pdfding
+      # OIDC_CLIENT_SECRET: client_secret
+      # OIDC_AUTH_URL: https://auth.pdfding.com/.well-known/openid-configuration
+
+networks:
+  default:
+    name: docker_penpot_network
+    driver: bridge
+
+volumes:
+  data:
+    name: docker_penpot_data
+    driver: local
+  media:
+    name: docker_penpot_media
+    driver: local
